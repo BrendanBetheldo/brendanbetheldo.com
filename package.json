@@ -1,0 +1,22 @@
+{
+    "name": "brendanbetheldo.com",
+    "version": "1.0.0",
+    "description": "HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.",
+    "main": "js/main.js",
+    "directories": {
+        "doc": "doc"
+    },
+    "scripts": {
+        "test": "echo\\\"Error: no test specified\\\" && exit 1\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/BrendanBetheldo/brendanbetheldo.com.git"
+    },
+    "author": "Brendan Betheldo",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/BrendanBetheldo/brendanbetheldo.com/issues"
+    },
+    "homepage": "https://github.com/BrendanBetheldo/brendanbetheldo.com#readme"
+}
