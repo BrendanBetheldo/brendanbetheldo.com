@@ -1,2 +1,30 @@
-/node_modules/.bin/atob
-/node_modules/*
+# Dependencies
+node_modules/
+
+# Build and cache
+.next/
+out/
+*.tsbuildinfo
+
+# Environment (secrets)
+.env
+.env.local
+.env.*.local
+
+# Payload generated
+payload-types.ts
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# IDE / OS
+.DS_Store
+*.log
+npm-debug.log*
+
+# Vercel
+.vercel

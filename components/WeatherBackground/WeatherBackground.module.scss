@@ -1,0 +1,8 @@
+@use '@/styles/variables' as *;
+
+.weatherBackground {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: $color-page-bg;
+}

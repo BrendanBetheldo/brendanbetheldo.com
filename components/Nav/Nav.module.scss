@@ -1,0 +1,16 @@
+@use '@/styles/variables' as *;
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  background-color: $color-nav-overlay;
+  border-bottom: 1px solid $color-border-nav;
+}
+
+.navInner {
+  max-width: $max-width-nav;
+  margin-inline: auto;
+  padding: $nav-padding-y $nav-padding-x;
+}

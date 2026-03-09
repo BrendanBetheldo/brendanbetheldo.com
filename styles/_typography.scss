@@ -1,0 +1,43 @@
+@use 'variables' as *;
+
+h1 {
+  font-size: $text-2xl;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+h2 {
+  font-size: $text-xl;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+h3 {
+  font-size: $text-lg;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+h4 {
+  font-size: $text-base;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+label {
+  font-size: $text-base;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+button {
+  font-size: $text-base;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+input {
+  font-size: $text-base;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-tight;
+}

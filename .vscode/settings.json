@@ -1,0 +1,7 @@
+{
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "workbench.editor.enablePreviewFromCodeNavigation": false,
+  "markdown.preview.openMarkdownLinks": "inEditor",
+  "markdown.preview.scrollEditorWithPreview": false
+}

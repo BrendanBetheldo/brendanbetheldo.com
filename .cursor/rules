@@ -1,0 +1,199 @@
+# Project Context & Engineering Standards
+
+## Who I Am
+
+Senior Front-end Engineering Manager. I know this stack deeply — don't explain basics, don't over-comment, don't pad responses. Be direct. If something is wrong, say so. If there's a better approach, say so and why.
+
+I hold a high bar. "Good enough" isn't good enough. No half measures.
+
+---
+
+## Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 14 — App Router |
+| Language | TypeScript — strict mode, no exceptions |
+| CMS | Payload 3.0 (runs inside Next.js) |
+| Database | PostgreSQL via Neon |
+| Styles | SASS — partials, BEM where appropriate |
+| Package manager | npm |
+| Node | LTS |
+| Weather | Open-Meteo (free, no API key) |
+| Hosting | Vercel |
+
+---
+
+## Hard Constraints
+
+- **No UI libraries** — no shadcn, MUI, Radix, Chakra, Headless UI, or anything similar
+- **No Tailwind or utility CSS frameworks** — SASS only
+- **No CSS-in-JS**
+- **No unnecessary dependencies** — if it isn't in the stack above, justify it before adding it
+- **No `any`** in TypeScript — ever
+- **No `// eslint-disable`** without a comment explaining exactly why
+- **No ORM** beyond what Payload requires internally
+
+---
+
+## Code Philosophy
+
+### Files
+- Every file has a single, clear purpose — if you have to think about what it does, it needs splitting
+- No component file over **300 lines** — if it's getting there, decompose it
+- Co-locate what belongs together — a component's types, styles, and tests live next to it
+- No barrel `index.ts` files unless they genuinely simplify imports
+
+### Components
+- Functional components only
+- Props interfaces defined above the component, named `[ComponentName]Props`
+- No inline styles — ever
+- Default exports for components, named exports for utilities and types
+
+### Hooks
+- **Don't reach for a hook when a function will do** — hooks are for side effects and stateful logic, not computation
+- Custom hooks only when the logic is genuinely reused across 2+ components or is complex enough to warrant isolation
+- Name custom hooks `use[DescriptiveName]` — the name should tell you exactly what it does
+- Never put everything in a hook to feel organised — co-locate logic with where it's used unless there's a real reason not to
+
+### Global State / Context
+- **Always ask before adding to global context** — if it can live in component state or be passed as props, it should
+- Context is for genuinely shared, cross-cutting concerns (auth, theme, weather state)
+- No Redux, no Zustand — React context is sufficient for this project's scope
+
+### TypeScript
+- Strict mode, always
+- Explicit return types on all functions
+- Prefer `type` over `interface` unless extending
+- Discriminated unions over boolean flags where state has multiple meaningful combinations
+- No `as` casting unless you're dealing with an external API response and you know exactly what you're doing
+
+### Documentation
+- Comments should read like a human wrote them, not a documentation generator
+- Explain **why**, not **what** — the code already says what
+- Don't document the obvious: `// increments count by 1` above `count++` is noise
+- JSDoc only on public utilities and CMS helpers — not on every function
+
+```ts
+// Good
+// Open-Meteo returns wind speed in km/h but the animation system expects m/s
+function normaliseWindSpeed(kmh: number): number {
+
+// Bad
+/**
+ * @param kmh - wind speed in kilometres per hour
+ * @returns wind speed converted to metres per second
+ */
+function normaliseWindSpeed(kmh: number): number {
+```
+
+---
+
+## Project Structure
+
+```
+/app
+  /admin              ← Payload admin (auto-generated)
+  /(site)
+    layout.tsx        ← Root layout — mounts WeatherBackground once
+    page.tsx          ← Single page, all sections rendered in order
+/components
+  /WeatherBackground  ← Canvas-based pixel art scene, weather + time driven
+  /Nav
+  /sections
+    /Hero
+    /About
+    /Expertise
+    /Career
+    /Projects
+    /Contact
+/payload
+  /collections        ← One file per Payload collection
+/styles
+  _variables.scss
+  _reset.scss
+  _typography.scss
+  _main.scss          ← Entry point, imports partials
+/lib
+  /weather.ts         ← Open-Meteo fetch + geolocation utility
+  /payload.ts         ← Payload query helpers
+/__tests__            ← Unit and integration tests mirror /lib and /components structure
+/e2e                  ← Playwright tests
+```
+
+---
+
+## Testing
+
+Testing is not optional. Every meaningful piece of logic ships with tests.
+
+### Testing Stack
+
+| Concern | Tool |
+|---|---|
+| Unit tests (utils, helpers, logic) | **Vitest** |
+| Component tests (rendering, interaction) | **React Testing Library + Vitest** |
+| E2E tests (user flows, full page) | **Playwright** |
+| API / Payload routes | **Vitest + supertest** |
+
+### Rules
+
+- **Unit test everything in `/lib`** — weather normalisation, CMS helpers, date/time utilities
+- **Component tests** cover: renders correctly, handles loading/error states, user interactions fire correct callbacks — not implementation details
+- **Don't test the framework** — testing that `useState` updates is not a test
+- Test behaviour, not structure — querying by role/label not by class or test ID unless unavoidable
+- E2E covers critical paths: page loads, sections visible, weather component initialises, contact link works
+- Aim for tests that would catch a real regression, not tests that inflate coverage numbers
+- Co-locate component tests: `WeatherBackground.test.tsx` sits next to `WeatherBackground.tsx`
+
+```
+/components/WeatherBackground/
+  WeatherBackground.tsx
+  WeatherBackground.test.tsx
+  WeatherBackground.module.scss
+  index.ts
+```
+
+---
+
+## WeatherBackground Component
+
+The signature centrepiece of the site. Rules for working on it:
+
+- Renders a **pixel art scene** (HTML5 Canvas or PixiJS — TBD) of a figure at a campfire in a forest clearing
+- Weather state derived from **Open-Meteo** using browser Geolocation API on mount
+- Time of day derived from **local system clock**
+- Prop: `weatherState: 'clear' | 'cloudy' | 'rain' | 'storm' | 'snow'`
+- Mounts **once** in root layout — never unmounts between section scrolls
+- Fixed, full-viewport, `z-index: 0` — content panels sit above it
+- Fetches weather once on mount, refreshes every 30 minutes — not on every render
+- Graceful fallback: if geolocation denied or API fails, defaults to `clear` at current local time
+
+---
+
+## Git
+
+- Conventional commits: `feat:`, `fix:`, `chore:`, `refactor:`, `test:`, `docs:`
+- No commits with broken tests
+- Branch naming: `feature/`, `fix/`, `chore/`
+- PRs (even solo) — keeps the history readable
+
+---
+
+## What to Always Ask Before Doing
+
+- Adding a new dependency
+- Adding anything to global context or a Payload collection
+- Creating a new custom hook
+- Reaching for a third-party solution when a small utility would do
+- Adding a new top-level directory
+
+---
+
+## What to Never Do Without Being Asked
+
+- Add comments explaining what code does (only why)
+- Add loading spinners/skeletons unless the section specifically needs them
+- Abstract prematurely — duplication is better than the wrong abstraction
+- Generate placeholder/lorem ipsum content
+- Add `console.log` statements to committed code

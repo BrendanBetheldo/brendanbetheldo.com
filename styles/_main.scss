@@ -1,0 +1,13 @@
+@use 'variables' as *;
+@use 'reset';
+@use 'typography';
+
+body {
+  background-color: $color-page-bg;
+  color: $color-text-inverse;
+}
+
+.site-content {
+  position: relative;
+  z-index: 1;
+}
